@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import * as serviceWorker from './serviceWorker';
+require('bootstrap/dist/css/bootstrap.css');
 
 ReactDOM.render(<Provider store={store}>
     <BrowserRouter>
