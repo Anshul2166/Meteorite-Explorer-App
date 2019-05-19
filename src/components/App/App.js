@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { SearchBox } from '../SearchBox/searchBox';
 import Table from '../Table/table';
 import './App.css';
-import meteoriteActions from '../../actions/meteoriteActions';
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import * as meteoriteActions from '../../actions/meteoriteActions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-function processApiData(data){
-	for(let i=0;i<data.length;i++){
+function processApiData(data) {
+	for (let i = 0; i < data.length; i++) {
 		delete data[i].geolocation;
 	}
 	return data;
@@ -16,33 +16,39 @@ function processApiData(data){
 class App extends Component {
 	state = {
 		searchTerm: '',
-		allData: '',
-    currentData: '',
-    titles:''
-  };
-  componentWillMount(){
-    let meteoriteData=this.props.meteorites;
-    let data=[];
-		console.log(meteoriteData);
-		meteoriteData=processApiData(meteoriteData);
-		console.log(meteoriteData);
-    for(let i=0;i<meteoriteData.length;i++){
-      let values=Object.values(meteoriteData[i]);
-      data.push(values);
-    }
-    let sampleData=meteoriteData[0];
-    let titles=Object.keys(sampleData);
-    this.setState({currentData:data,allData:data,titles:titles});
-  }
-	changeSearchTerm = searchTerm => {
+		allData: [],
+		currentData: [],
+		titles: ['Name', 'Id', 'Name Type', 'Rec Class', 'Mass(g)', 'Fall', 'Year', 'Latitude', 'Longitude'],
+	};
+	async componentDidMount() {
+		await this.props.meteoriteActions.getData();
+		console.log(this.props);
+		let data = this.props.data.meteorites;
+		this.setState({ currentData: data, allData: data });
+	}
+	changeSearchTerm = event => {
+		let searchTerm = event.target.value;
 		this.setState({ searchTerm });
-  };
+	};
+	executeSearch = () => {
+		let { allData, searchTerm } = this.state;
+		let filteredData = [];
+		console.log(searchTerm);
+		for (let i = 0; i < allData.length; i++) {
+			console.log(allData[i]);
+			let data = allData[i][0].toLowerCase();
+			if (data.includes(searchTerm.toLowerCase())) {
+				filteredData.push(allData[i]);
+			}
+		}
+		this.setState({ currentData: filteredData });
+	};
 	render() {
-		let { searchTerm, currentData,titles } = this.state;
+		let { searchTerm, currentData, titles } = this.state;
 		return (
 			<div className="App">
-				<SearchBox searchTerm={searchTerm} changeSearchTerm={this.changeSearchTerm} />
-				<Table data={currentData} titles={titles}/>
+				<SearchBox searchTerm={searchTerm} changeSearchTerm={this.changeSearchTerm} executeSearch={this.executeSearch}/>
+				<Table data={currentData} titles={titles} />
 			</div>
 		);
 	}
@@ -50,7 +56,7 @@ class App extends Component {
 
 const mapStateToProps = state => {
 	return {
-		meteorites: state.meteorites
+		data: state.meteorites,
 	};
 };
 

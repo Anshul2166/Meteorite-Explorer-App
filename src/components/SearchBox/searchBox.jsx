@@ -4,7 +4,7 @@ export const SearchBox=props=>{
     return(
         <div className="search-box">
             <input type="text" onChange={props.changeSearchTerm} value={props.searchTerm} />
-            <button>Search</button>
+            <button onClick={props.executeSearch}>Search</button>
         </div>
     );
 }

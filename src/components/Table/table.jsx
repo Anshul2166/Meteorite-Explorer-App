@@ -17,6 +17,11 @@ function TableData(props) {
 class Table extends Component {
 	render() {
 		let { titles, data } = this.props;
+		console.log(titles);
+		console.log(data);
+		if(data.length===0){
+			return null;
+		}
 		const TableTitles = titles.map((title, index) => <th key={index}>{title}</th>);
 		return (
 			<div className="meteorite-table">
