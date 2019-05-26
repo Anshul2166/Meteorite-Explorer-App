@@ -5,13 +5,7 @@ import './App.css';
 import * as meteoriteActions from '../../actions/meteoriteActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
-function processApiData(data) {
-	for (let i = 0; i < data.length; i++) {
-		delete data[i].geolocation;
-	}
-	return data;
-}
+import logo from '../../assets/loader.gif';
 
 class App extends Component {
 	state = {
@@ -45,9 +39,29 @@ class App extends Component {
 	};
 	render() {
 		let { searchTerm, currentData, titles } = this.state;
+		let { isLoading,errorOccured } = this.props;
+		if (isLoading) {
+			return (
+				<div className="loading-image">
+					<img src={logo} alt="loading..." />
+					<p>Loading...</p>
+				</div>
+			);
+		}
+		else if(errorOccured){
+			return(
+				<div className="loading-image">
+					<h4>Error occured</h4>
+				</div>
+			);
+		}
 		return (
 			<div className="App">
-				<SearchBox searchTerm={searchTerm} changeSearchTerm={this.changeSearchTerm} executeSearch={this.executeSearch}/>
+				<SearchBox
+					searchTerm={searchTerm}
+					changeSearchTerm={this.changeSearchTerm}
+					executeSearch={this.executeSearch}
+				/>
 				<Table data={currentData} titles={titles} />
 			</div>
 		);
@@ -57,6 +71,7 @@ class App extends Component {
 const mapStateToProps = state => {
 	return {
 		data: state.meteorites,
+		isLoading: state.meteorites.isLoading,
 	};
 };
 

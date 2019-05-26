@@ -5,3 +5,9 @@
   text-align: center;
   margin-top: 3.5%;
 }
+
+.loading-image{
+  position: absolute;
+  top: 40%;
+  left: 45%;
+}

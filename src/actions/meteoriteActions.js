@@ -22,6 +22,9 @@ function processData(data){
 export const getData = () => async dispatch => {
 	try {
 		console.log('User action=localsignup');
+		dispatch({
+			type:ACTIONS.DATA_LOADING
+		});
 		const response = await axios.get('https://data.nasa.gov/resource/gh4g-9sfh.json');
 		console.log('Done with response');
 		console.log(response);
